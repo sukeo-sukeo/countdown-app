@@ -1,15 +1,10 @@
 <script setup>
 import { ref } from "@vue/reactivity"
+import { watch } from "@vue/runtime-core";
 
-const sampleData = [
-  {matter: "test1", date:"yyyy-mm-dd", count: 60},
-  {matter: "test2", date:"yyyy-mm-dd", count: 20},
-  {matter: "test3", date:"yyyy-mm-dd", count: 10},
-]
-
-const matter = ref("基本情報技術者試験");
-const date = ref("2022-10-24");
-const count = ref(65);
+const props = defineProps({
+  item: Object
+});
 
 </script>
 
@@ -20,18 +15,18 @@ const count = ref(65);
         <tbody>
           <tr>
             <td>事柄</td>
-            <td>{{ matter }}</td>
+            <td>{{ props.item.matter }}</td>
           </tr>
           <tr>
             <td>実施日</td>
-            <td>{{ date }}</td>
+            <td>{{ props.item.date }}</td>
           </tr>
         </tbody>
       </v-table>
       <v-row class="justify-center align-baseline">
         <span class="text-h4">あと</span>
         <p style="font-size: 150px;">
-          {{ count }}
+          {{ props.item.count }}
         </p>
         <span class="text-h4 ms-3">日</span>
       </v-row>
