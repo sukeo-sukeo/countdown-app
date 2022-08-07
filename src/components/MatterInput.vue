@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <v-container>
+  <v-container class="pb-0">
     <v-row>
       <v-text-field
       label="事柄"
@@ -24,9 +24,3 @@
     </v-row>
   </v-container>
 </template>
-
-<style>
-/* .v-text-field input {
-  font-size: 10px;
-  } */
-</style>
