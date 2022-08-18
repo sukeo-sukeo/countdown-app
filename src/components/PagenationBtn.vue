@@ -7,6 +7,8 @@ const emits = defineEmits([
   "matter-change"
 ]);
 
+console.log(props.dataLength);
+
 </script>
 
 <template>
