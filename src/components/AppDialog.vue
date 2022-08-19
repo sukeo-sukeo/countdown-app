@@ -1,5 +1,4 @@
 <script setup>
-import AppDiscription from './AppDiscription.vue';
 
 const emits = defineEmits([
   "dialog-close"
@@ -10,7 +9,7 @@ const emits = defineEmits([
 <template>
   <div class="modal" @click="emits('dialog-close')"></div>
   <v-card class="modal-content">
-    <AppDiscription />
+    <slot />
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text @click="emits('dialog-close')"> 閉じる </v-btn>

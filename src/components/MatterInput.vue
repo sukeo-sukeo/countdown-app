@@ -26,7 +26,9 @@ const registData = async () => {
     return
   }
 
-  if (values.length !== 2) {
+  if (values.length !== 2 ||
+    values[0] === "" ||
+    values[1] === "") {
     alert("入力が不足しています。");
     return
   }
@@ -36,8 +38,7 @@ const registData = async () => {
     console.log("Document written with ID: ", docRef.id);
 
     data.value = [];
-    // 追加アイテムを配列にプッシュする
-    emits("item-registed", item);
+    emits("item-registed");
 
   } catch (e) {
     console.error("Error adding document: ", e);

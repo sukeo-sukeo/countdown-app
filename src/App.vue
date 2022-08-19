@@ -14,34 +14,27 @@ import { db } from './main.js';
 
 import { ref } from '@vue/reactivity';
 
-const sampleData = [
-  { matter: "test1", date: "2022-12-25", count: 60 },
-  { matter: "test2", date: "2022-12-25", count: 20 },
-  { matter: "test3", date: "2022-12-25", count: 10 },
-  { matter: "test4", date: "2022-12-25", count: 10 },
-  { matter: "test5", date: "2022-12-25", count: 10 },
-  { matter: "test6", date: "2022-12-25", count: 10 },
-];
-
 const dataList = ref([]);
-const getData = async () => {
+const getData = async (update = 0) => {
+  dataList.value = [];
+
   const q = query(collection(db, "matters"), where("userId", "==", isLogin.value), orderBy("created", "desc"));
 
   try {
     const docs = await getDocs(q);
     docs.forEach(doc => {
-      // console.log(doc.data());
-      dataList.value.push(doc.data());
-    })
+      const data = doc.data();
+      data.itemId = doc.id;
+      dataList.value.push(data);
+    });
+
+    currentNum.value = update ? currentNum.value : 0;
+    currentItem.value = update ? dataList.value[currentNum.value] : dataList.value[0];
+   
   } catch (e) {
     console.error("Error getting document: ", e);
   }
 }
-
-const addItemToDataList = (item) => {
-  dataList.value.unshift(item);
-  pagenationHundle(0);
-} 
 
 const currentNum = ref(0);
 const currentItem = ref({});
@@ -70,8 +63,6 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     isLogin.value = user.uid;
     await getData();
-    currentItem.value = dataList.value[0]
-    console.log(dataList.value);
   }
 });
 
@@ -110,13 +101,16 @@ const logout = async () => {
       
       <MatterInput class="mt-5"
        :isLogin="isLogin"
-       @item-registed="addItemToDataList" />
+       @item-registed="getData" />
 
       <!-- v-if isLogin -->
       <template v-if="isLogin">
         <template v-if="dataList.length">
         <!-- データがある -->
-          <CountDown :item="currentItem" />
+          <CountDown 
+          :item="currentItem"
+          @delete-click="getData"
+          @update-click="getData"/>
           <PagenationBtn 
           @matter-change="pagenationHundle" 
           :currentNum="currentNum + 1"
@@ -134,7 +128,9 @@ const logout = async () => {
 
       <AppDialog 
       v-if="showDialog" 
-      @dialog-close="showDialog = false"/>
+      @dialog-close="showDialog = false">
+        <AppDiscription />
+      </AppDialog>
       
       <AppFooter />
     </v-main>
