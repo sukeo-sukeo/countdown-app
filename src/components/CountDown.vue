@@ -1,8 +1,9 @@
 <script setup>
 import AppDialog from "./AppDialog.vue";
-import { ref } from "@vue/reactivity";
+import { ref, toRefs } from "@vue/reactivity";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../main.js';
+import { computed, watch } from "@vue/runtime-core";
 
 const props = defineProps({
   item: Object,
@@ -11,19 +12,20 @@ const emits = defineEmits([
   "delete-click", "update-click"
 ]);
 
+const data = ref([]);
+
+const { item } = toRefs(props);
+watch(item, () => {
+  data.value[0] = item.value.matter;
+  data.value[1] = item.value.limit;
+});
+
+const limitDay = computed(() => Math.ceil((new Date(item.value.limit) - new Date()) / (1000 * 60 * 60 * 24)));
+
 const showDialog = ref(false);
 
-const data = ref([
-  props.item.matter,
-  props.item.limit
-]);
-
 const updateData = async () => {
-  console.log(data.value);
-  console.log(props.item.itemId);
-  if (data.value.length !== 2 ||
-    data.value[0] === "" ||
-    data.value[1] === "") {
+  if (!data.value[0] || !data.value[1]) {
     alert("入力に不備あり！");
     return
   }
@@ -62,26 +64,26 @@ const removeData = async () => {
           <tr>
             <td>事柄</td>
             <td>
-              {{ props.item.matter }}
+              {{ item.matter }}
               <v-icon class="float-right" @click="showDialog = true">mdi-pencil</v-icon>
             </td>
           </tr>
           <tr>
             <td>実施日</td>
             <td>
-              {{ props.item.limit }}
+              {{ item.limit }}
               <v-icon class="float-right" @click="showDialog = true">mdi-pencil</v-icon>
             </td>
           </tr>
         </tbody>
       </v-table>
       <v-row class="justify-center align-baseline">
-        <v-btn icon style="position: absolute; left: 30px; margin-top: 55px;" @click="removeData">
+        <v-btn icon style="position: absolute; left: 20px; margin-top: 20px;" @click="removeData">
           <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
         <span class="text-h4">あと</span>
-        <p style="font-size: 150px;">
-          {{ 10 }}
+        <p style="font-size: 130px;">
+          {{ limitDay }}
         </p>
         <span class="text-h4 ms-3">日</span>
       </v-row>
@@ -95,18 +97,17 @@ const removeData = async () => {
       <p class="mb-5">編集</p>
       <v-row class="w-100">
         <v-text-field
-        :label="props.item.matter"
+        :label="item.matter"
         variant="outlined"
         v-model="data[0]"
         ></v-text-field>
       </v-row>
       <v-row class="w-100">
         <v-text-field
-        :label="props.item.limit"
-        placeholder="yyyy-mm-dd"
+        :label="item.limit"
+        type="date"
         variant="outlined"
         v-model="data[1]"
-        append-icon="mdi-calendar-range"
         ></v-text-field>
         <v-btn class="mt-2 mx-3" @click="updateData">
           変更する！

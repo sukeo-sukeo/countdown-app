@@ -14,6 +14,7 @@ const data = ref([]);
 
 const registData = async () => {
   const values = data.value;
+ 
   const item = {
       matter: values[0],
       limit: values[1],
@@ -26,9 +27,7 @@ const registData = async () => {
     return
   }
 
-  if (values.length !== 2 ||
-    values[0] === "" ||
-    values[1] === "") {
+  if (!values[0] || !values[1]) {
     alert("入力が不足しています。");
     return
   }
@@ -59,15 +58,15 @@ const registData = async () => {
     </v-row>
     <v-row>
       <v-text-field
+      type="date"
       label="実施日"
-      placeholder="yyyy-mm-dd"
       variant="outlined"
-      append-icon="mdi-calendar-range"
       v-model="data[1]"
       ></v-text-field>
       <v-btn class="mt-2 mx-3" @click="registData">
         登録！
       </v-btn>
+      
     </v-row>
   </v-container>
 </template>
