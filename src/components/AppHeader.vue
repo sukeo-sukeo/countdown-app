@@ -1,13 +1,19 @@
 <script setup>
-import { ref } from "@vue/reactivity";
+import { ref, toRefs } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 
 const emits = defineEmits([
   "login-click", "logout-click", "info-click"
 ]);
 
 const props = defineProps({
-  isLogin: String
+  isLogin: String,
+  photoUrl: String
 });
+
+const photoURL = ref("")
+const { photoUrl } = toRefs(props);
+watch(photoUrl, () => photoURL.value = photoUrl.value)
 
 </script>
 
@@ -18,7 +24,9 @@ const props = defineProps({
     </v-app-bar-title>
     <template v-if="props.isLogin">
       <v-btn icon @click="emits('logout-click')">
-        <v-icon>mdi-logout</v-icon>
+        <v-avatar>
+          <img :src="photoURL" class="w-100">
+        </v-avatar>
       </v-btn>
     </template>
     <template v-else>

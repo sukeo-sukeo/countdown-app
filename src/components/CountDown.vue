@@ -2,16 +2,17 @@
 import AppDialog from "./AppDialog.vue";
 import { ref, toRefs } from "@vue/reactivity";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from '../main.js';
+import { db } from '../config/firebase.config.js';
 import { computed, watch } from "@vue/runtime-core";
 
 const props = defineProps({
   item: Object,
 });
 const emits = defineEmits([
-  "delete-click", "update-click"
+  "delete-click", "update-click", "card-swipe"
 ]);
 
+const showDialog = ref(false);
 const data = ref([]);
 
 const { item } = toRefs(props);
@@ -21,8 +22,6 @@ watch(item, () => {
 });
 
 const limitDay = computed(() => Math.ceil((new Date(item.value.limit) - new Date()) / (1000 * 60 * 60 * 24)));
-
-const showDialog = ref(false);
 
 const updateData = async () => {
   if (!data.value[0] || !data.value[1]) {
@@ -38,27 +37,31 @@ const updateData = async () => {
     emits("update-click", 1);
   
   } catch (e) {
-    console.log("update error:", e);
+    alert("update error:", e);
   }
 }
 
 const removeData = async () => {
-  console.log(props.item.itemId);
-
-  try {
-    await deleteDoc(doc(db, "matters", props.item.itemId));
-    emits("delete-click");
-  
-  } catch (e) {
-    console.log("delete error: ", e);
+  if (confirm("アイテムを削除します")) {
+    try {
+      await deleteDoc(doc(db, "matters", props.item.itemId));
+      emits("delete-click");
+    
+    } catch (e) {
+      alert("delete error: ", e);
+    }
   }
 }
+
 
 </script>
 
 <template>
   <v-container class="pt-0">
-    <v-card>
+    <v-card v-touch="{
+      right: () => emits('card-swipe', -1),
+      left: () => emits('card-swipe', 1),
+    }">
       <v-table>
         <tbody>
           <tr>

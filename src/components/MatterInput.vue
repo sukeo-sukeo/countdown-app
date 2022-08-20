@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../main.js";
+import { db } from "../config/firebase.config.js";
 
 const props = defineProps({
   isLogin: String
@@ -34,13 +34,13 @@ const registData = async () => {
 
   try {
     const docRef = await addDoc(collection(db, "matters"), item);
-    console.log("Document written with ID: ", docRef.id);
+    alert("アイテムを登録しました！");
 
     data.value = [];
     emits("item-registed");
 
   } catch (e) {
-    console.error("Error adding document: ", e);
+    alert("Error adding document: ", e);
   }
 }
 

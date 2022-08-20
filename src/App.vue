@@ -8,9 +8,10 @@ import PagenationBtn from './components/PagenationBtn.vue';
 import AppDiscription from './components/AppDiscription.vue';
 import AppDialog from './components/AppDialog.vue';
 
-import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { db } from './main.js';
+
+import { db, auth, provider } from './config/firebase.config.js';
 
 import { ref } from '@vue/reactivity';
 
@@ -52,15 +53,13 @@ const pagenationHundle = (ope) => {
   currentItem.value = dataList.value[currentNum.value];
 }
 
-
 const isLogin = ref(""); //login中はuidが入る
+const photoURL = ref("");
 const showDialog = ref(false);
-
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    photoURL.value = user.photoURL;
     isLogin.value = user.uid;
     await getData();
   }
@@ -75,7 +74,6 @@ const login = async () => {
     const errorCode = error.code;
     const errorMessage = error.message;
     const email = error.customData.email;
-    const credential = GoogleAuthProvider.credentialFromError(error);
   }
 };
 
@@ -83,6 +81,7 @@ const logout = async () => {
   if (confirm("ログアウトしてもよろしいですか？")) {
     await signOut(auth);
     isLogin.value = "";
+    photoURL.value = "";
     dataList.value = [];
   }
 }
@@ -95,6 +94,7 @@ const logout = async () => {
     <v-main>
       <AppHeader
        :isLogin="isLogin"
+       :photoUrl="photoURL"
        @login-click="login"
        @logout-click="logout"
        @info-click="showDialog = true" />
@@ -109,8 +109,10 @@ const logout = async () => {
         <!-- データがある -->
           <CountDown 
           :item="currentItem"
+          @card-swipe="pagenationHundle"
           @delete-click="getData"
           @update-click="getData"/>
+          
           <PagenationBtn 
           @matter-change="pagenationHundle" 
           :currentNum="currentNum + 1"
