@@ -7,6 +7,7 @@ import PagenationBtn from './components/PagenationBtn.vue';
 
 import AppDiscription from './components/AppDiscription.vue';
 import AppDialog from './components/AppDialog.vue';
+import ListDialog from './components/ListDialog.vue';
 
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
@@ -56,6 +57,7 @@ const pagenationHundle = (ope) => {
 const isLogin = ref(""); //login中はuidが入る
 const photoURL = ref("");
 const showDialog = ref(false);
+const showList = ref(false);
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -111,6 +113,7 @@ const logout = async () => {
           <CountDown 
           :item="currentItem"
           @card-swipe="pagenationHundle"
+          @swipe-show-list="showList = !showList"
           @delete-click="getData"
           @update-click="getData"/>
           
@@ -133,6 +136,12 @@ const logout = async () => {
       v-if="showDialog" 
       @dialog-close="showDialog = false">
         <AppDiscription />
+      </AppDialog>
+      
+      <AppDialog 
+      v-if="showList" 
+      @dialog-close="showList = false">
+        <ListDialog :dataList="dataList" />
       </AppDialog>
       
       <AppFooter />

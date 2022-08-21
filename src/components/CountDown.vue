@@ -9,7 +9,7 @@ const props = defineProps({
   item: Object,
 });
 const emits = defineEmits([
-  "delete-click", "update-click", "card-swipe"
+  "delete-click", "update-click", "card-swipe", "swipe-show-list"
 ]);
 
 const showDialog = ref(false);
@@ -59,8 +59,11 @@ const removeData = async () => {
 <template>
   <v-container class="pt-0">
     <v-card class="slider" v-touch="{
+      up: () => emits('swipe-show-list'),
+      down: () => emits('swipe-show-list'),
       right: () => emits('card-swipe', -1),
       left: () => emits('card-swipe', 1),
+      
     }">
       <v-table>
         <tbody>
