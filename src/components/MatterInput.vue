@@ -63,7 +63,7 @@ const registData = async () => {
       variant="outlined"
       v-model="data[1]"
       ></v-text-field>
-      <v-btn class="mt-2 mx-3" @click="registData">
+      <v-btn class="mt-2 mx-3 bg-indigo" @click="registData">
         登録！
       </v-btn>
       

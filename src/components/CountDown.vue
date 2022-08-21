@@ -58,7 +58,7 @@ const removeData = async () => {
 
 <template>
   <v-container class="pt-0">
-    <v-card v-touch="{
+    <v-card class="slider" v-touch="{
       right: () => emits('card-swipe', -1),
       left: () => emits('card-swipe', 1),
     }">
@@ -81,11 +81,11 @@ const removeData = async () => {
         </tbody>
       </v-table>
       <v-row class="justify-center align-baseline">
-        <v-btn icon style="position: absolute; left: 20px; margin-top: 20px;" @click="removeData">
+        <v-btn icon class="bg-grey-lighten-4" style="position: absolute; left: 20px; margin-top: 20px;" @click="removeData">
           <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
-        <span class="text-h4">あと</span>
-        <p style="font-size: 130px;">
+        <span class="text-h5">あと</span>
+        <p class="text-indigo font-rubik" style="font-size: 100px;">
           {{ limitDay }}
         </p>
         <span class="text-h4 ms-3">日</span>
@@ -112,7 +112,7 @@ const removeData = async () => {
         variant="outlined"
         v-model="data[1]"
         ></v-text-field>
-        <v-btn class="mt-2 mx-3" @click="updateData">
+        <v-btn class="mt-2 mx-3 bg-indigo" @click="updateData">
           変更する！
         </v-btn>
       </v-row>

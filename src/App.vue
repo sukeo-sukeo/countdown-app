@@ -90,7 +90,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <v-app>
+  <v-app class="font-rocknroll">
     <v-main>
       <AppHeader
        :isLogin="isLogin"
@@ -107,6 +107,7 @@ const logout = async () => {
       <template v-if="isLogin">
         <template v-if="dataList.length">
         <!-- データがある -->
+        
           <CountDown 
           :item="currentItem"
           @card-swipe="pagenationHundle"
@@ -138,3 +139,15 @@ const logout = async () => {
     </v-main>
   </v-app>
 </template>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=RocknRoll+One&family=Rubik+Dirt&display=swap');
+
+.font-rocknroll {
+  font-family: 'RocknRoll One', sans-serif;
+}
+
+.font-rubik {
+  font-family: 'Rubik Dirt', cursive;
+}
+</style>

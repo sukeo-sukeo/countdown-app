@@ -18,9 +18,9 @@ watch(photoUrl, () => photoURL.value = photoUrl.value)
 </script>
 
 <template>
-  <v-app-bar class="select-none">
+  <v-app-bar class="select-none" color="indigo">
     <v-app-bar-title>
-      <span class="cursor-pointer">カウントダウン.web</span>
+      <span class="cursor-pointer font-weight-bold">カウントダウン.web</span>
     </v-app-bar-title>
     <template v-if="props.isLogin">
       <v-btn icon @click="emits('logout-click')">
