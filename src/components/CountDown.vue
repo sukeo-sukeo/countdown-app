@@ -21,7 +21,23 @@ watch(item, () => {
   data.value[1] = item.value.limit;
 });
 
-const limitDay = computed(() => Math.ceil((new Date(item.value.limit) - new Date()) / (1000 * 60 * 60 * 24)));
+const getYMD = (dateObj) => {
+  const Y = dateObj.getFullYear();
+  const M = dateObj.getMonth() + 1;
+  const D = dateObj.getDate();
+  return `${Y}-${M}-${D}`;
+}
+
+const limitDay = computed(() => {
+  let limit = new Date(item.value.limit);
+  let today = new Date();
+
+  limit = new Date(getYMD(limit) + " 00:00:00");
+  today = new Date(getYMD(today));
+
+  return Math.ceil((limit - today) / (1000 * 60 * 60 * 24))
+});
+
 
 const updateData = async () => {
   if (!data.value[0] || !data.value[1]) {

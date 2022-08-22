@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
 <v-list class="w-100">
-  <h3 class="text-center">いちらん</h3>
+  <h3 class="text-center">期限いちらん</h3>
   <v-list-item v-for="data in props.dataList" :key="data">
     <span class="text-caption">
       {{data.matter}}

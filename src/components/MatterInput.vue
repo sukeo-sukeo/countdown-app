@@ -23,7 +23,7 @@ const registData = async () => {
     };
 
   if (!props.isLogin) {
-    alert("ログインをお願いします。");
+    alert("ログインをお願いします。\nログインはGoogleアカウントでの簡単ログインに対応しています。");
     return
   }
 

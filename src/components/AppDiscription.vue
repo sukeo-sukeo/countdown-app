@@ -9,5 +9,7 @@
   <v-divider class="my-3"></v-divider>
   <p class="text-center">【スワイプ操作に対応しています】</p>
   <p class="text-center">左右:スライド 上下:リスト表示</p>
+  <v-divider class="my-3"></v-divider>
+  <p class="text-center">ログインはGoogleアカウントでの簡単ログインに対応!</p>
 </v-container>
 </template>
