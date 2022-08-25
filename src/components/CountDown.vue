@@ -9,7 +9,7 @@ const props = defineProps({
   item: Object,
 });
 const emits = defineEmits([
-  "delete-click", "update-click", "card-swipe", "swipe-show-list"
+  "delete-click", "update-click", "card-swipe", "swipe-show-list", "sort-limit", "sort-regist"
 ]);
 
 const showDialog = ref(false);
@@ -25,7 +25,7 @@ const getYMD = (dateObj) => {
   const Y = dateObj.getFullYear();
   const M = dateObj.getMonth() + 1;
   const D = dateObj.getDate();
-  return `${Y}-${M}-${D}`;
+  return `${Y}/${M}/${D}`;
 }
 
 const limitDay = computed(() => {
@@ -35,7 +35,7 @@ const limitDay = computed(() => {
   limit = new Date(getYMD(limit) + " 00:00:00");
   today = new Date(getYMD(today));
 
-  return Math.ceil((limit - today) / (1000 * 60 * 60 * 24))
+  return Math.ceil((limit - today) / (1000 * 60 * 60 * 24)).toString();
 });
 
 
@@ -76,7 +76,6 @@ const removeData = async () => {
   <v-container class="pt-0">
     <v-card class="slider" v-touch="{
       up: () => emits('swipe-show-list'),
-      down: () => emits('swipe-show-list'),
       right: () => emits('card-swipe', -1),
       left: () => emits('card-swipe', 1),
       
@@ -100,9 +99,27 @@ const removeData = async () => {
         </tbody>
       </v-table>
       <v-row class="justify-center align-baseline">
-        <v-btn icon class="bg-grey-lighten-4" style="position: absolute; left: 20px; margin-top: 20px;" @click="removeData">
-          <v-icon>mdi-trash-can-outline</v-icon>
+
+        <v-btn elevation="0" icon style="position: absolute; left: 20px; margin-top: 20px;">
+          <v-icon>mdi-dots-vertical</v-icon>
+          <v-menu activator="parent">
+            <v-list>
+              <v-list-item @click="emits('sort-limit', 0, 'limit')">
+                <v-icon>mdi-sort</v-icon>
+                締切順
+              </v-list-item>
+              <v-list-item @click="emits('sort-regist', 0, 'created')">
+                <v-icon>mdi-sort</v-icon>
+                登録順
+              </v-list-item>
+              <v-list-item @click="removeData">
+                <v-icon>mdi-delete</v-icon>
+                削除
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-btn>
+
         <span class="text-h5">あと</span>
         <p class="text-indigo font-rubik" style="font-size: 100px;">
           {{ limitDay }}

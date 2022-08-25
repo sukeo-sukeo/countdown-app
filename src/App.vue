@@ -17,10 +17,12 @@ import { db, auth, provider } from './config/firebase.config.js';
 import { ref } from '@vue/reactivity';
 
 const dataList = ref([]);
-const getData = async (update = 0) => {
+const getData = async (update=0, sortType="created" ) => {
   dataList.value = [];
 
-  const q = query(collection(db, "matters"), where("userId", "==", isLogin.value), orderBy("created", "desc"));
+  const sortRule = sortType === "limit" ? "asc" : "desc";
+
+  const q = query(collection(db, "matters"), where("userId", "==", isLogin.value), orderBy(sortType, sortRule));
 
   try {
     const docs = await getDocs(q);
@@ -115,7 +117,9 @@ const logout = async () => {
           @card-swipe="pagenationHundle"
           @swipe-show-list="showList = !showList"
           @delete-click="getData"
-          @update-click="getData"/>
+          @update-click="getData"
+          @sort-limit="getData"
+          @sort-regist="getData"/>
           
           <PagenationBtn 
           @matter-change="pagenationHundle" 
